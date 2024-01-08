@@ -29,4 +29,7 @@ public class Profile {
 
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
+
+    @Column(name = "refresh_token")
+    private String refreshToken;
 }

@@ -19,4 +19,9 @@ public class ProfileController {
         ProfileDto savedProfile = profileService.createProfile(profileDto);
         return new ResponseEntity<>(savedProfile, HttpStatus.CREATED);
     }
+
+    @GetMapping("/test-token") // Изменено здесь
+    public ResponseEntity<String> testToken() {
+        return ResponseEntity.ok("Токен действителен");
+    }
 }

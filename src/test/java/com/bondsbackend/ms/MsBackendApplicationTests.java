@@ -9,5 +9,4 @@ class MsBackendApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }
