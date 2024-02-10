@@ -6,30 +6,29 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import java.util.Date;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-
+import java.util.Base64;
 
 @Component
 public class JwtTokenProvider {
 
     private static final String SECRET_KEY = "bXlwYXNzd29yZGlzdmVyeXN0cm9uZ2FuZHNlY3VyZSEhJCUjJjU2Nzg";
-    @Value("${security.jwt.refresh-token.expire-length:86400000}") // 24 часа в миллисекундах
+
+    @Value("${security.jwt.refresh-token.expire-length:86400000}")
     private long refreshValidityInMilliseconds;
-    @Value("${security.jwt.token.expire-length:3600000}") // 1 hour in milliseconds
+
+    @Value("${security.jwt.token.expire-length:3600000}")
     private long validityInMilliseconds;
+
     private byte[] secretKeyBytes;
 
-    // Инициализация
     @PostConstruct
     protected void init() {
-        secretKeyBytes = java.util.Base64.getDecoder().decode(SECRET_KEY);
+        secretKeyBytes = Base64.getDecoder().decode(SECRET_KEY);
     }
 
-    // Create JWT token
-    public String createToken(String username) {
+    public String createToken(String username, String role) {
         Claims claims = Jwts.claims().setSubject(username);
+        claims.put("role", role);
 
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
@@ -42,7 +41,11 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    // Validate JWT token
+    public String getRoleFromToken(String token) {
+        Claims claims = Jwts.parser().setSigningKey(secretKeyBytes).parseClaimsJws(token).getBody();
+        return claims.get("role", String.class);
+    }
+
     public boolean validateToken(String token) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKeyBytes).parseClaimsJws(token);
@@ -52,7 +55,6 @@ public class JwtTokenProvider {
         }
     }
 
-    // Создание Refresh Token
     public String createRefreshToken(String username) {
         Claims claims = Jwts.claims().setSubject(username);
 
@@ -67,8 +69,12 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    public String getUsernameFromToken(String token) {
+        Claims claims = Jwts.parser().setSigningKey(secretKeyBytes).parseClaimsJws(token).getBody();
+        return claims.getSubject();
+    }
 
-    // Get username from JWT token
+
     public String getUsername(String token) {
         return Jwts.parser().setSigningKey(secretKeyBytes).parseClaimsJws(token).getBody().getSubject();
     }

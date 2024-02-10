@@ -1,0 +1,156 @@
+# Базовые переменные
+@baseUrl = http://localhost:8080
+@authToken = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huZG9lNCIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTcwNjcyNjUzNywiZXhwIjoxNzA2NzMwMTM3fQ.LqojjrS6xdzyiA2x6UaCqS6eKasq5w8JavLekDPabCI
+@refreshToken = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huZG9lNCIsImlhdCI6MTcwNjcyNjUzNywiZXhwIjoxNzA2ODEyOTM3fQ.1odhHgPdNVRnjxDD48Hfu5UrWvTGS2HzO8zFahz9J7Y
+
+
+
+### Регистрация пользователя
+POST {{baseUrl}}/api/profiles
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "johndoe4@example.com",
+  "username": "johndoe4",
+  "password": "password"
+}
+
+
+### Вход в систему
+POST {{baseUrl}}/auth/signin
+Content-Type: application/json
+
+{
+  "username": "johndoe4",
+  "password": "password"
+}
+
+# Действия пользователя с облигациями
+### Получение всех облигаций
+GET {{baseUrl}}/api/bonds
+Authorization: Bearer {{authToken}}
+
+
+### Получение всех транзакций пользователя
+GET {{baseUrl}}/api/transactions
+Authorization: Bearer {{authToken}}
+
+
+
+### Создание облигации 1
+POST http://localhost:8080/api/admin/bonds
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "ticker": "BOND001",
+  "name": "Test Bond 1",
+  "nominalPrice": 1000.00,
+  "currentMarketPrice": 1050.00,
+  "maturityDate": "2030-01-01"
+}
+
+### Создание облигации 2
+POST http://localhost:8080/api/admin/bonds
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "ticker": "BOND002",
+  "name": "Test Bond 2",
+  "nominalPrice": 2000.00,
+  "currentMarketPrice": 2100.00,
+  "maturityDate": "2030-01-01"
+}
+
+
+### Покупка облигации 2
+POST {{baseUrl}}/api/transactions
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "bondId": 2,
+  "transactionDate": "2023-03-01",
+  "quantity": 10,
+  "transactionPrice": 1050.00
+}
+
+
+### Покупка облигации 3
+POST {{baseUrl}}/api/transactions
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "bondId": 3,
+  "transactionDate": "2021-01-01",
+  "quantity": 10,
+  "transactionPrice": 1050.00
+}
+
+
+### Добавление исторической цены для облигации 2
+POST {{baseUrl}}/api/admin/bonds/2/price-history
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "date": "2022-12-01",
+  "price": 1020.00
+}
+
+### Добавление исторической цены для облигации 2
+POST {{baseUrl}}/api/admin/bonds/2/price-history
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "date": "2023-01-01",
+  "price": 1030.00
+}
+
+### Добавление исторической цены для облигации 3
+POST {{baseUrl}}/api/admin/bonds/3/price-history
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "date": "2022-12-01",
+  "price": 2050.00
+}
+
+### Добавление исторической цены для облигации 3
+POST {{baseUrl}}/api/admin/bonds/3/price-history
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "date": "2023-01-01",
+  "price": 2070.00
+}
+
+
+### Анализ портфеля
+POST {{baseUrl}}/api/portfolio/analyze
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "startDate": "2024-01-01",
+  "endDate": "2024-08-01"
+}
+
+
+###
+GET {{baseUrl}}/api/admin/bonds/3/price-history
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+
+###
+GET {{baseUrl}}/api/bonds/2
+Content-Type: application/json
+Authorization: Bearer {{authToken}}

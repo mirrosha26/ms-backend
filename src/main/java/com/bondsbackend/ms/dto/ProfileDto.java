@@ -1,4 +1,3 @@
-// ProfileDto.java
 package com.bondsbackend.ms.dto;
 
 import lombok.*;

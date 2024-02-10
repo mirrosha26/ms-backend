@@ -1,4 +1,3 @@
-// Profile.java
 package com.bondsbackend.ms.entity;
 
 import jakarta.persistence.*;
@@ -32,4 +31,7 @@ public class Profile {
 
     @Column(name = "refresh_token")
     private String refreshToken;
+
+    @Column(name = "role", nullable = false)
+    private String role = "ADMIN";
 }

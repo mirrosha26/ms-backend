@@ -1,26 +1,46 @@
-// ProfileServiceImpl.java
 package com.bondsbackend.ms.service.impl;
 
 import com.bondsbackend.ms.dto.ProfileDto;
 import com.bondsbackend.ms.entity.Profile;
+import com.bondsbackend.ms.entity.Portfolio;
 import com.bondsbackend.ms.mapper.ProfileMapper;
 import com.bondsbackend.ms.repository.ProfileRepository;
+import com.bondsbackend.ms.repository.PortfolioRepository;
 import com.bondsbackend.ms.service.ProfileService;
-import lombok.AllArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.Optional;
 
 @Service
-@AllArgsConstructor
 public class ProfileServiceImpl implements ProfileService {
 
     private final ProfileRepository profileRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final PortfolioRepository portfolioRepository;
+    private final ProfileMapper profileMapper;
+
+    @Autowired
+    public ProfileServiceImpl(ProfileRepository profileRepository,
+                              PortfolioRepository portfolioRepository,
+                              ProfileMapper profileMapper) {
+        this.profileRepository = profileRepository;
+        this.portfolioRepository = portfolioRepository;
+        this.profileMapper = profileMapper;
+    }
 
     @Override
-    public ProfileDto createProfile(ProfileDto profileDto) {
-        Profile profile = ProfileMapper.mapToProfile(profileDto, passwordEncoder);
-        Profile savedProfile = profileRepository.save(profile);
-        return ProfileMapper.mapToProfileDto(savedProfile);
+    public ProfileDto createOrUpdateProfile(ProfileDto profileDto) {
+        Optional<Profile> existingProfile = profileRepository.findByUsername(profileDto.getUsername());
+        if (existingProfile.isPresent()) {
+            return null; // Имя пользователя уже существует
+        }
+
+        Profile profile = profileMapper.toEntity(profileDto);
+        profile = profileRepository.save(profile);
+
+        Portfolio portfolio = new Portfolio();
+        portfolio.setProfile(profile);
+        portfolioRepository.save(portfolio);
+
+        return profileMapper.toDto(profile);
     }
 }

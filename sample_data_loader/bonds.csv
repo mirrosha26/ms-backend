@@ -1,0 +1,4 @@
+ticker,name,nominalPrice,termInYears,couponRate,couponAnnouncementDate
+BOND123NI,Роснефть Облигация,1000.0,5,4.5,2024-01-31
+BOND124NI,Газпром Облигация,950.0,7,5.0,2024-02-15
+BOND125NI,Лукойл Облигация,1100.0,3,4.0,2024-03-10

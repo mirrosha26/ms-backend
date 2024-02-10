@@ -1,0 +1,154 @@
+# Базовые переменные
+@baseUrl = http://localhost:8080
+@authToken = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huZG9lMzIiLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3MDc1NjU5MjgsImV4cCI6MTcwNzU2OTUyOH0.lvlLCb-yhZcUFfZIw7wZtLNmMmOekles3shtDyRnUFg
+@refreshToken = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huZG9lNCIsImlhdCI6MTcwNjcyNzQ2MCwiZXhwIjoxNzA2ODEzODYwfQ.HMWgJT5KoVKLYXew5fCO-iWnm7NA5NQ2exOqUuaLAJM
+
+### Регистрация пользователя
+POST {{baseUrl}}/api/profiles
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "johndoe3@example.com",
+  "username": "johndoe32",
+  "password": "password"
+}
+
+
+### Вход в систему
+POST {{baseUrl}}/auth/signin
+Content-Type: application/json
+
+{
+  "username": "johndoe32",
+  "password": "password"
+}
+
+### Обновление токена
+POST {{baseUrl}}/auth/refresh-token
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+
+# Действия пользователя с облигациями
+### Получение всех облигаций
+GET {{baseUrl}}/api/bonds
+Authorization: Bearer {{authToken}}
+
+### Получение облигации по ID
+GET {{baseUrl}}/api/bonds/4
+Authorization: Bearer {{authToken}}
+
+# Действия администратора с облигациями
+### Создание новой облигации (Администратор)
+POST {{baseUrl}}/api/admin/bonds
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "ticker": "BOND125",
+    "name": "Example Bond",
+    "nominalPrice": 1000.0,
+    "termInYears": 5,
+    "couponRate": 4.5,
+    "couponAnnouncementDate": "2024-01-31"
+}
+
+
+
+### Обновление существующей облигации (Администратор)
+PUT {{baseUrl}}/api/admin/bonds/1
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "ticker": "BOND56785",
+    "name": "Corporate Bond",
+    "nominalPrice": 150.75,
+    "currentMarketPrice": 150.75,
+    "maturityDate": "2028-05-31" 
+}
+
+### Удаление облигации (Администратор)
+DELETE {{baseUrl}}/api/admin/bonds/1
+Authorization: Bearer {{authToken}}
+
+
+
+###
+GET {{baseUrl}}/api/admin/bonds/3/price-history
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+
+###
+POST {{baseUrl}}/api/admin/bonds/1/price-history
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "date": "2024-01-01",
+  "price": 1070.00,
+  "couponIncome" : 30.00
+}
+
+
+###
+PUT {{baseUrl}}/api/admin/bonds/price-history/1
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "date": "2024-01-01",
+  "price": 1070.00,
+  "couponIncome" : 30.00
+}
+
+
+###
+DELETE {{baseUrl}}/api/admin/bonds/price-history/4
+Authorization: Bearer {{authToken}}
+
+
+
+
+# Действия пользователя с транзакциями
+### Создание новой транзакции
+POST {{baseUrl}}/api/transactions
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "bondId": 1,
+  "transactionDate": "2024-01-18",
+  "quantity": 10,
+  "transactionPrice": 101.5
+}
+
+### Обновление транзакции
+PUT {{baseUrl}}/api/transactions/7
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "bondId": 5,
+  "transactionDate": "2024-02-19",
+  "quantity": 15,
+  "transactionPrice": 102.5
+}
+
+### Удаление транзакции
+DELETE {{baseUrl}}/api/transactions/2
+Authorization: Bearer {{authToken}}
+
+### Получение всех транзакций пользователя
+GET {{baseUrl}}/api/transactions
+Authorization: Bearer {{authToken}}
+
+### Получение транзакции по ID
+GET {{baseUrl}}/api/transactions/2
+Authorization: Bearer {{authToken}}
